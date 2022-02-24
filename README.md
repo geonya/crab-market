@@ -29,3 +29,9 @@ experimental: {
 reactRoot: true,
 },
 };
+
+```html
+<button
+	className="w-5 h-5 rounded-full bg-yellow-500 focus:ring-2 ring-offset-2 ring-yellow-500 transition"
+/>
+```

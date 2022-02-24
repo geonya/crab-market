@@ -5,20 +5,34 @@ const Home: NextPage = () => {
 		<div className="bg-slate-400 py-20 px-20 grid gap-10 min-h-screen">
 			<div className="bg-white p-5 rounded-2xl shadow-2xl">
 				<span className="font-semibold text-3xl">Select Item</span>
-				<div className="flex justify-between">
-					<span className="text-gray-500 my-2">Grey Chair</span>
-					<span className="font-semibold">$19</span>
-				</div>
-				<div className="flex justify-between">
-					<span className="text-gray-500">Tooly Chair</span>
-					<span className="font-semibold">$80</span>
-				</div>
+				<ul>
+					{[1, 2, 3, 4].map((i) => (
+						<div
+							key={i}
+							className="flex justify-between odd:bg-blue-500"
+						>
+							<span className="text-gray-500 my-2">
+								Grey Chair
+							</span>
+							<span className="font-semibold">$19</span>
+						</div>
+					))}
+				</ul>
+
+				<ul>
+					{["geony", "bora", "soree", ""].map((c, i) => (
+						<li key={i} className="bg-blue-300 py-2 empty:hidden">
+							{c}
+						</li>
+					))}
+				</ul>
+
 				<div className="flex justify-between mt-2 pt-2 border-t-2 border-dashed">
 					<span className="">Total</span>
 					<span className="font-semibold">$99</span>
 				</div>
 				<button
-					className="mt-5 bg-blue-500 text-white p-3 text-center rounded-3xl w-3/4 mx-auto 
+					className="block mt-5 bg-blue-500 text-white p-3 text-center rounded-3xl w-3/4 mx-auto 
 				hover:bg-teal-500 hover:text-black
 				active:bg-yellow-500 focus:text-red-500
 				"
@@ -26,7 +40,7 @@ const Home: NextPage = () => {
 					Checkout
 				</button>
 			</div>
-			<div className="bg-white overflow-hidden  rounded-2xl shadow-2xl">
+			<div className="bg-white overflow-hidden  rounded-2xl shadow-2xl group">
 				<div className="bg-blue-500 p-6 pb-14">
 					<span className="text-white text-2xl">Profile</span>
 				</div>
@@ -38,7 +52,7 @@ const Home: NextPage = () => {
 							</span>
 							<span className="font-medium">340</span>
 						</div>
-						<div className="h-24 w-24 bg-red-400 rounded-full"></div>
+						<div className="h-24 w-24 bg-gray-400 rounded-full group-hover:bg-red-300 transition-colors"></div>
 						<div className="flex flex-col items-center">
 							<span className="text-small text-gray-500">
 								Spent
@@ -68,9 +82,9 @@ const Home: NextPage = () => {
 					<span className="text-xs text-gray-500">Chair</span>
 					<div className="mt-2 mb-5 flex justify-between items-center">
 						<div className="space-x-2">
-							<button className="w-5 h-5 rounded-full bg-yellow-500"></button>
-							<button className="w-5 h-5 rounded-full bg-indigo-500"></button>
-							<button className="w-5 h-5 rounded-full bg-teal-500"></button>
+							<button className="w-5 h-5 rounded-full bg-yellow-500 focus:ring-2 ring-offset-2 ring-yellow-500 transition" />
+							<button className="w-5 h-5 rounded-full bg-indigo-500 focus:ring-2 ring-offset-2 ring-indigo-500 transition" />
+							<button className="w-5 h-5 rounded-full bg-teal-500 focus:ring-2 ring-offset-2 ring-teal-500 transition" />
 						</div>
 						<div className="flex items-center space-x-4">
 							<button className=" bg-blue-200 flex justify-center items-center aspect-square w-8 text-xl text-gray-500 rounded-lg">
