@@ -55,8 +55,22 @@ divide-y-2
 
 ```
 
-화면 비율로 자동으로 사이즈 맞추기
+### 화면 비율로 자동으로 사이즈 맞추기
 
 ```html
 <div className="w-full bg-slate-300 aspect-square rounded-full" />
+```
+
+### margin 보다는 space 를 쓰는 것이 좋다.
+
+```html
+<div className="px-4 space-y-5 py-10"></div>
+```
+
+### 5.16 mobile only layout \_app.tsx
+
+```html
+<div className="w-full max-w-xl mx-auto">
+	<Component {...pageProps} />
+</div>
 ```
