@@ -54,3 +54,9 @@ chat.tsx
 divide-y-2
 
 ```
+
+화면 비율로 자동으로 사이즈 맞추기
+
+```html
+<div className="w-full bg-slate-300 aspect-square rounded-full" />
+```
