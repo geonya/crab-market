@@ -35,3 +35,10 @@ reactRoot: true,
 	className="w-5 h-5 rounded-full bg-yellow-500 focus:ring-2 ring-offset-2 ring-yellow-500 transition"
 />
 ```
+
+# tailwind CSS JIT feature
+
+```css
+bg-[url('/vercel.svg')]
+text-[200px] text-[#eeeeee]
+```
