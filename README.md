@@ -42,3 +42,15 @@ reactRoot: true,
 bg-[url('/vercel.svg')]
 text-[200px] text-[#eeeeee]
 ```
+
+# divide
+
+형제 요소가 있으면 border 를 줌
+
+```css
+
+chat.tsx
+
+divide-y-2
+
+```
