@@ -5,7 +5,7 @@ import LayOut from "../../components/layout";
 
 const Stream: NextPage = () => {
 	return (
-		<LayOut title="Stream" hasTabBar>
+		<LayOut title="Live" hasTabBar>
 			<div className="py-10 space-y-4 divide-y-2">
 				{[1, 2, 3, 4, 5].map((_, i) => (
 					<Link href={`/live/${i}`} key={i}>
