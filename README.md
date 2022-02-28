@@ -85,3 +85,5 @@ divide-y-2
 3. Prisma가 이런 타입에 관한 정보를 알고 있으면 client를 생성해줄 수 있음. client를 이용하면 TS로 DB와 직접 상호작용 가능, 자동완성 제공.
 
 4. Prisma Studio : Visual Database Browser, DB를 위한 관리자 패널같은 것.
+
+# Planet Scale
