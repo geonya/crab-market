@@ -15,12 +15,15 @@ export default function Forms() {
 		formState: { errors },
 		setError,
 		setValue,
+		reset,
+		resetField,
 	} = useForm<LoginForm>({
-		mode: "onChange",
+		mode: "onChange", // onChange 할 때 event 발생 submit도 있음
 	});
 	const onValid = (data: LoginForm) => {
 		console.log("I'm valid baby");
 		setError("username", { message: "username is already existed" });
+		resetField("password");
 	};
 	const onInvalid = (errors: FieldErrors) => {
 		console.log(errors);

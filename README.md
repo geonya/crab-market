@@ -77,6 +77,8 @@ divide-y-2
 
 # Prisma
 
+https://www.prisma.io/
+
 1. Node.js and Typescript ORM(Object Relational Mapping)
    => JS or TS 와 데이터베이스 사이에 다리를 놓아줌 (기본적으로 번역기의 역할을 한다고 생각하면 됨)
 
@@ -87,3 +89,32 @@ divide-y-2
 4. Prisma Studio : Visual Database Browser, DB를 위한 관리자 패널같은 것.
 
 # Planet Scale
+
+https://planetscale.com/
+
+# React Hook Form
+
+https://react-hook-form.com/api/useform
+
+```
+pscale connect crab-market
+```
+
+```typescript
+<input
+	{...register("email", {
+		required: "Email is required.",
+		validate: {
+			notGmail: (value) =>
+				!value.includes("@gmail.com") || "Gmail is not allowed",
+		},
+	})}
+	type="email"
+	placeholder="Email"
+	className={`${
+		Boolean(errors.email?.message)
+			? "border-2 border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500"
+			: ""
+	}`}
+/>
+```
