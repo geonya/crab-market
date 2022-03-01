@@ -3,6 +3,7 @@ import twilio from "twilio";
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
+import { withApiSession } from "@libs/server/withSession";
 
 mail.setApiKey(process.env.SENDGRID_API_KEY!);
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
@@ -53,4 +54,10 @@ async function handler(
 	});
 }
 
-export default withHandler("POST", handler);
+export default withApiSession(
+	withHandler({
+		method: "POST",
+		handler,
+		isPrivate: false,
+	})
+);
