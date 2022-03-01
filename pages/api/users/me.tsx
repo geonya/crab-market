@@ -14,15 +14,7 @@ async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse<ResponseType>
 ) {
-	const { token } = req.body;
-	const exists = await client.token.findUnique({
-		where: { payload: token },
-	});
-	if (!exists) return res.status(404).end();
-	req.session.user = {
-		id: exists.userId,
-	};
-	await req.session.save();
+	console.log(req.session.user);
 	res.status(200).end();
 }
 
