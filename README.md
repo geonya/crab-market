@@ -118,3 +118,19 @@ pscale connect crab-market
 	}`}
 />
 ```
+
+##### shortcut
+
+string -> number
+
+```typescript
+user = await client.user.create({
+	data: {
+		name: "Anonymous",
+		phone: +phone,
+	},
+});
+```
+
++"1241" = 1241
+1241 + "" = "1241

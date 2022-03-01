@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import LayOut from "../../components/layout";
+import LayOut from "@components/layout";
 
 const CommunityPostDetail: NextPage = () => {
 	return (
