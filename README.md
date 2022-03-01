@@ -134,3 +134,20 @@ user = await client.user.create({
 
 +"1241" = 1241
 1241 + "" = "1241
+
+## prisma upsert
+
+-   생성하거나 수정할 때 사용
+
+```typescript
+user = await client.user.upsert({
+	where: {
+		phone: +phone,
+	},
+	create: {
+		name: "Anonimous",
+		phone: +phone,
+	},
+	update: {},
+});
+```
