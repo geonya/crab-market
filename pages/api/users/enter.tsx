@@ -1,8 +1,10 @@
+import mail from "@sendgrid/mail";
 import twilio from "twilio";
 import client from "@libs/server/client";
 import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 
+mail.setApiKey(process.env.SENDGRID_API_KEY!);
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_TOKEN);
 
 async function handler(
@@ -30,12 +32,21 @@ async function handler(
 		},
 	});
 	if (phone) {
-		const message = await twilioClient.messages.create({
-			messagingServiceSid: process.env.TWILIO_MSG_SID,
-			to: process.env.MY_PHONE!,
-			body: `Your login token is ${payload}`,
-		});
-		console.log(message);
+		// const message = await twilioClient.messages.create({
+		// 	messagingServiceSid: process.env.TWILIO_MSG_SID,
+		// 	to: process.env.MY_PHONE!,
+		// 	body: `Your login token is ${payload}`,
+		// });
+		// console.log(message);
+	} else if (email) {
+		// const email = await mail.send({
+		// 	from: "geony8410@gmail.com",
+		// 	to: "geony8410@gmail.com",
+		// 	subject: "Your Crab Market Verification Email",
+		// 	text: `You token is ${payload}`,
+		// 	html: `<strong>You token is ${payload}</strong>`,
+		// });
+		// console.log(email);
 	}
 	return res.json({
 		ok: true,
