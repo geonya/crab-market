@@ -21,7 +21,7 @@ const Home: NextPage = () => {
 				<title>Home</title>
 			</Head>
 			<div className="flex flex-col space-y-5 divide-y-[1px]">
-				{data?.products.map((product) => (
+				{data?.products?.map((product) => (
 					<Item
 						id={product.id}
 						key={product.id}
