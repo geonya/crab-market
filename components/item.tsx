@@ -16,7 +16,7 @@ export default function Item({
 	hearts,
 }: ItemProps) {
 	return (
-		<Link href={`/items/${id}`}>
+		<Link href={`/products/${id}`}>
 			<a className="flex px-4 pt-5 cursor-pointer justify-between">
 				<div className="flex space-x-4">
 					<div className="w-20 h-20 bg-gray-400 rounded-md" />
@@ -25,7 +25,7 @@ export default function Item({
 							{title}
 						</h3>
 						<span className="font-medium mt-1 text-gray-900">
-							${price}
+							₩ {price}
 						</span>
 					</div>
 				</div>

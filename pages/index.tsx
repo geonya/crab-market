@@ -4,27 +4,34 @@ import Item from "@components/item";
 import LayOut from "@components/layout";
 import useUser from "@libs/client/useUser";
 import Head from "next/head";
+import useSWR from "swr";
+import { Product } from "@prisma/client";
+
+interface ProductsResponse {
+	ok: boolean;
+	products: Product[];
+}
 
 const Home: NextPage = () => {
 	const { user, isLoading } = useUser();
-	console.log(user);
+	const { data } = useSWR<ProductsResponse>(`/api/products`);
 	return (
 		<LayOut title="Home" hasTabBar>
 			<Head>
 				<title>Home</title>
 			</Head>
 			<div className="flex flex-col space-y-5 divide-y-[1px]">
-				{[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1].map((_, i) => (
+				{data?.products.map((product) => (
 					<Item
-						id={i}
-						key={i}
-						title="iPhone 20"
-						price={99}
+						id={product.id}
+						key={product.id}
+						title={product.name}
+						price={product.price}
 						comments={1}
 						hearts={1}
 					></Item>
 				))}
-				<FloatingButton href="/items/upload">
+				<FloatingButton href="/products/upload">
 					<svg
 						className="h-6 w-6"
 						xmlns="http://www.w3.org/2000/svg"
