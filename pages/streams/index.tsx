@@ -12,11 +12,10 @@ interface StreamsResponse {
 
 const Streams: NextPage = () => {
 	const { data } = useSWR<StreamsResponse>(`/api/streams`);
-
 	return (
 		<LayOut title="Streams" hasTabBar>
 			<div className="py-10 space-y-4 divide-y-2">
-				{data?.streams.map((stream) => (
+				{data?.streams?.map((stream) => (
 					<Link href={`/streams/${stream.id}`} key={stream.id}>
 						<a className="pt-4 block px-4 ">
 							<div className="w-full rounded-md shadow-sm bg-slate-300 aspect-video" />
