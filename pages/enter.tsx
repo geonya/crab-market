@@ -72,7 +72,8 @@ const Enter: NextPage = () => {
 						/>
 
 						<Button
-							text={tokenLoading ? "Loading" : "Confirm ToKeon"}
+							loading={tokenLoading}
+							text={"Confirm ToKeon"}
 						/>
 					</form>
 				) : (
