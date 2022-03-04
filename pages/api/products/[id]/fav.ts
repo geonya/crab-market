@@ -41,8 +41,20 @@ async function handler(
 			},
 		});
 	}
-
-	res.json({ ok: true });
+	const fav = await client.record.count({
+		where: {
+			productId: +id.toString(),
+			kind: "Fav",
+		},
+	});
+	await client.product.update({
+		where: {
+			id: +id.toString(),
+		},
+		data: {
+			favCount: fav,
+		},
+	});
 }
 export default withApiSession(
 	withHandler({

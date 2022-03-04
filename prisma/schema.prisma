@@ -50,6 +50,7 @@ model Product {
   price       Float
   description String   @db.MediumText
   record      Record[]
+  favCount    Int      @default(0)
 }
 
 model Post {

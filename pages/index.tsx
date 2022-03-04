@@ -7,13 +7,9 @@ import Head from "next/head";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
 
-interface ProductFavs extends Product {
-	_count: { favs: number };
-}
-
 interface ProductsResponse {
 	ok: boolean;
-	products: ProductFavs[];
+	products: Product[];
 }
 
 const Home: NextPage = () => {
@@ -32,7 +28,7 @@ const Home: NextPage = () => {
 						title={product.name}
 						price={product.price}
 						comments={1}
-						hearts={product._count.favs}
+						hearts={product.favCount}
 					></Item>
 				))}
 				<FloatingButton href="/products/upload">
