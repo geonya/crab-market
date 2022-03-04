@@ -22,7 +22,6 @@ async function handler(
 		ok: true,
 		reviews,
 	});
-	res.status(200).end();
 }
 
 export default withApiSession(
