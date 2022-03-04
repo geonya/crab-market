@@ -40,17 +40,18 @@ model Token {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId      Int
-  image       String
-  name        String
-  price       Float
-  description String   @db.MediumText
-  record      Record[]
-  favCount    Int      @default(0)
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId        Int
+  image         String
+  name          String
+  price         Float
+  description   String   @db.MediumText
+  record        Record[]
+  favCount      Int      @default(0)
+  commentsCount Int      @default(0)
 }
 
 model Post {

@@ -2,7 +2,7 @@ import type { NextPage } from "next";
 import FloatingButton from "@components/floating-button";
 import Item from "@components/item";
 import LayOut from "@components/layout";
-import useUser from "@libs/client/useUser";
+
 import Head from "next/head";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
@@ -13,7 +13,6 @@ interface ProductsResponse {
 }
 
 const Home: NextPage = () => {
-	const { user, isLoading } = useUser();
 	const { data } = useSWR<ProductsResponse>(`/api/products`);
 	return (
 		<LayOut title="Home" hasTabBar>
@@ -27,7 +26,7 @@ const Home: NextPage = () => {
 						key={product.id}
 						title={product.name}
 						price={product.price}
-						comments={1}
+						comments={product.commentsCount}
 						hearts={product.favCount}
 					></Item>
 				))}
