@@ -6,7 +6,7 @@ const nextConfig = {
 		reactRoot: "concurrent",
 	},
 	images: {
-		domains: ["imagedelivery.net"],
+		domains: ["imagedelivery.net", "videodelivery.net"],
 	},
 };
 

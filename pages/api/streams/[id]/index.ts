@@ -10,6 +10,7 @@ async function handler(
 ) {
 	const {
 		query: { id },
+		session: { user },
 	} = req;
 	const stream = await client.stream.findUnique({
 		where: {
@@ -30,9 +31,13 @@ async function handler(
 			},
 		},
 	});
+	const isOwner = stream?.userId === user?.id;
+	if (stream && !isOwner) {
+		stream.cloudflareUrl = "********";
+		stream.cloudflareKey = "********";
+	}
 	res.json({ ok: true, stream });
 }
-
 export default withApiSession(
 	withHandler({
 		methods: ["GET"],

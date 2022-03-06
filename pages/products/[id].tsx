@@ -10,6 +10,7 @@ import { cls } from "@libs/client/utils";
 import { userInfo } from "os";
 import useUser from "@libs/client/useUser";
 import Image from "next/image";
+import products from "pages/api/products";
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -47,10 +48,8 @@ const ItemDetail: NextPage = () => {
 							layout="fill"
 							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product.image}/public`}
 							className="bg-slate-300 object-cover"
+							alt={products.name}
 						/>
-						<h1 className="absolute w-full text-center text-red-500">
-							hello!
-						</h1>
 					</div>
 					<div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
 						<Image
@@ -58,6 +57,7 @@ const ItemDetail: NextPage = () => {
 							height={48}
 							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product?.user?.avatar}/avatar`}
 							className="w-12 h-12 rounded-full bg-slate-300"
+							alt={data?.product?.user?.name}
 						/>
 						<div>
 							<p className="text-sm font-medium text-gray-700">
