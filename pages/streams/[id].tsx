@@ -117,13 +117,14 @@ const StreamDetail: NextPage = () => {
 								key={message.id}
 								message={message.message}
 								reversed={message.user.id === user?.id}
+								avatar={message.user.avatar}
 							/>
 						))}
 					</div>
 					<div className="fixed py-2 bg-white  bottom-5 inset-x-0">
 						<form
 							onSubmit={handleSubmit(onValid)}
-							className="flex relative max-w-md items-center  w-full mx-auto"
+							className="flex relative max-w-md items-center w-full mx-auto"
 						>
 							<input
 								{...register("message", { required: true })}

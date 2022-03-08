@@ -7,10 +7,9 @@ import Link from "next/link";
 import { Product, User } from "@prisma/client";
 import useMutation from "@libs/client/useMutation";
 import { cls } from "@libs/client/utils";
-import { userInfo } from "os";
-import useUser from "@libs/client/useUser";
 import Image from "next/image";
-import products from "pages/api/products";
+import { useForm } from "react-hook-form";
+import { useEffect } from "react";
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -36,29 +35,52 @@ const ItemDetail: NextPage = () => {
 			(prev) => prev && { ...prev, isLiked: !prev.isLiked },
 			false
 		);
-		// mutate(`/api/users/me`, (prev: any) => ({ ok: !prev.ok }), false);
+		mutate(`/api/users/me`, (prev: any) => ({ ok: !prev.ok }), false);
 		toggleFav({});
 	};
+
+	const { handleSubmit } = useForm();
+	const [createChatRoom, { loading, data: chatData }] =
+		useMutation("/api/chats");
+	const onValid = async () => {
+		if (loading) return;
+		const productId = Number(router.query.id);
+		createChatRoom({ productId });
+	};
+	useEffect(() => {
+		if (chatData?.ok) {
+			router.push(`/chats/${chatData.chat.id}`);
+		}
+	}, [chatData, router]);
 	return (
 		<LayOut hasTabBar canGoBack>
 			<div className="px-4 py-4">
 				<div className="mb-8">
 					<div className="relative pb-96">
-						<Image
-							layout="fill"
-							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product.image}/public`}
-							className="bg-slate-300 object-cover"
-							alt={products.name}
-						/>
+						{data?.product.image ? (
+							<Image
+								layout="fill"
+								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product.image}/public`}
+								className="object-cover"
+								alt="product-name"
+							/>
+						) : (
+							<div className="bg-slate-300 object-cover" />
+						)}
 					</div>
 					<div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-						<Image
-							width={48}
-							height={48}
-							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product?.user?.avatar}/avatar`}
-							className="w-12 h-12 rounded-full bg-slate-300"
-							alt={data?.product?.user?.name}
-						/>
+						{data?.product?.user?.avatar ? (
+							<Image
+								width={48}
+								height={48}
+								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product?.user?.avatar}/avatar`}
+								className="w-12 h-12 rounded-full bg-slate-300"
+								alt="avatar-image"
+							/>
+						) : (
+							<div className="w-12 h-12 rounded-full bg-slate-300" />
+						)}
+
 						<div>
 							<p className="text-sm font-medium text-gray-700">
 								{data ? data.product?.user?.name : "Loading..."}
@@ -83,7 +105,10 @@ const ItemDetail: NextPage = () => {
 							{data?.product?.description}
 						</p>
 						<div className="flex items-center justify-between space-x-2">
-							<Button large text="Talk to seller" />
+							<form onSubmit={handleSubmit(onValid)}>
+								<Button large text="Talk to seller" />
+							</form>
+
 							<button
 								onClick={onFavClick}
 								className={cls(

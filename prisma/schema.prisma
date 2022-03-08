@@ -29,6 +29,7 @@ model User {
   receivedReviews Review[]    @relation(name: "receivedReviews")
   record          Record[]
   streams         Stream[]
+  chats           Chat[]
   messages        Message[]
 }
 
@@ -42,18 +43,20 @@ model Token {
 }
 
 model Product {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id            Int       @id @default(autoincrement())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId        Int
   image         String
   name          String
   price         Float
-  description   String   @db.MediumText
+  description   String    @db.MediumText
   record        Record[]
-  favCount      Int      @default(0)
-  commentsCount Int      @default(0)
+  favCount      Int       @default(0)
+  commentsCount Int       @default(0)
+  chats         Chat[]
+  messages      Message[]
 }
 
 model Post {
@@ -135,6 +138,17 @@ model Stream {
   cloudflareKey String
 }
 
+model Chat {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int?
+  messages  Message[]
+}
+
 model Message {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
@@ -142,6 +156,10 @@ model Message {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   message   String   @db.MediumText
-  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
-  streamId  Int
+  stream    Stream?  @relation(fields: [streamId], references: [id], onDelete: Cascade)
+  streamId  Int?
+  product   Product? @relation(fields: [productId], references: [id], onDelete: Cascade)
+  productId Int?
+  chat      Chat?    @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId    Int?
 }
