@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-
 import LayOut from "@components/layout";
 import Message from "@components/message";
 import useUser from "@libs/client/useUser";
