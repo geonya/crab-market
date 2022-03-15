@@ -58,7 +58,7 @@ const Upload: NextPage = () => {
 		}
 	}, [photo]);
 	return (
-		<LayOut canGoBack title="Upload Product">
+		<LayOut canGoBack seoTitle="Upload Product">
 			<form className="p-4 space-y-4" onSubmit={handleSubmit(onValid)}>
 				<div>
 					{photoPreview ? (

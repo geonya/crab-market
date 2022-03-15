@@ -15,10 +15,7 @@ interface ProductsResponse {
 const Home: NextPage = () => {
 	const { data } = useSWR<ProductsResponse>(`/api/products`);
 	return (
-		<LayOut title="Home" hasTabBar>
-			<Head>
-				<title>Home</title>
-			</Head>
+		<LayOut seoTitle="Home" hasTabBar>
 			<div className="flex flex-col space-y-5 divide-y-[1px]">
 				{data?.products?.map((product) => (
 					<Item

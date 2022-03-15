@@ -20,7 +20,7 @@ const Profile: NextPage = () => {
 	const { user, isLoading } = useUser();
 	const { data } = useSWR<ReviewsResponse>("/api/reviews");
 	return (
-		<LayOut title="Profile" hasTabBar>
+		<LayOut seoTitle="Profile" hasTabBar>
 			<div className="py-10 px-4">
 				<div className="flex items-center space-x-3">
 					{user?.avatar ? (

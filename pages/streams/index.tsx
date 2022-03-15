@@ -15,7 +15,7 @@ const Streams: NextPage = () => {
 	const { data } = useSWR<StreamsResponse>(`/api/streams`);
 
 	return (
-		<LayOut title="Streams" hasTabBar>
+		<LayOut title="Streams" hasTabBar seoTitle="Steaming">
 			<div className="py-10 space-y-4 divide-y-2">
 				{data?.streams?.map((stream) => (
 					<Link href={`/streams/${stream.id}`} key={stream.id}>

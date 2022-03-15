@@ -71,7 +71,7 @@ const ChatDetail: NextPage = () => {
 	};
 
 	return (
-		<LayOut canGoBack>
+		<LayOut canGoBack seoTitle="Chat">
 			<div className="py-10 pb-16 h-[100vh] overflow-y-scroll  px-4 space-y-4">
 				{data?.chat.messages.map((message) => (
 					<Message

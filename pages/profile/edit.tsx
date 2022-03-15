@@ -90,7 +90,7 @@ const EditProfile: NextPage = () => {
 		}
 	}, [avatar]);
 	return (
-		<LayOut canGoBack title="Edit Profile">
+		<LayOut canGoBack seoTitle="Edit Profile">
 			<form
 				onSubmit={handleSubmit(onValid)}
 				className="py-10 px-4 space-y-4"

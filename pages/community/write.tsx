@@ -33,7 +33,7 @@ const Write: NextPage = () => {
 		}
 	}, [data, router]);
 	return (
-		<LayOut canGoBack title="Write Post">
+		<LayOut canGoBack seoTitle="Write Post">
 			<form onSubmit={handleSubmit(onValid)} className="px-4 py-10">
 				<TextArea
 					register={register("question", {

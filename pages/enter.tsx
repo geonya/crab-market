@@ -6,15 +6,6 @@ import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import dynamic from "next/dynamic";
-
-const Bs = dynamic(
-	() =>
-		new Promise((resolve) =>
-			setTimeout(() => resolve(import("@components/bs")), 10000)
-		),
-	{ ssr: false, suspense: true }
-);
 
 interface EnterForm {
 	email?: string;
@@ -134,7 +125,6 @@ const Enter: NextPage = () => {
 							{method === "phone" ? (
 								<>
 									<Suspense fallback="Loading something Big">
-										<Bs />
 									</Suspense>
 									<Input
 										register={register("phone", {

@@ -7,7 +7,7 @@ interface ItemProps {
 	price: number;
 	comments: number;
 	hearts: number;
-	image: string;
+	image?: string;
 }
 
 export default function Item({
