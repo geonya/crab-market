@@ -1,12 +1,15 @@
-import type { NextPage } from "next";
+import type { NextPage, NextPageContext } from "next";
 import LayOut from "@components/layout";
 import Message from "@components/message";
 import useUser from "@libs/client/useUser";
+import useSWR, { SWRConfig } from "swr";
 import { useRouter } from "next/router";
-import useSWR from "swr";
-import { Chat } from "@prisma/client";
+import { Chat, User } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
+import { withSsrSession } from "@libs/server/withSession";
+import client from "@libs/server/client";
+import React, { useEffect, useRef, useState } from "react";
 
 interface ChatMessage {
 	id: number;
@@ -19,10 +22,16 @@ interface ChatMessage {
 
 interface ChatWithMessages extends Chat {
 	messages: ChatMessage[];
+	user: { id: number };
+	product: {
+		user: {
+			id: number;
+		};
+	};
 }
 
 interface ChatResponse {
-	ok: true;
+	ok: boolean;
 	chat: ChatWithMessages;
 }
 
@@ -31,7 +40,7 @@ interface MessageForm {
 }
 
 const ChatDetail: NextPage = () => {
-	const { user } = useUser();
+	const { user, isLoading } = useUser();
 	const router = useRouter();
 	const { register, handleSubmit, reset } = useForm<MessageForm>();
 	const { data, mutate } = useSWR<ChatResponse>(
@@ -40,11 +49,14 @@ const ChatDetail: NextPage = () => {
 			refreshInterval: 1000,
 		}
 	);
-
+	useEffect(() => {
+		if (data?.ok === false) {
+			router.push("/chats");
+		}
+	}, [data, router]);
 	const [sendMessage, { data: sendMessageData, loading }] = useMutation(
 		`/api/chats/${router.query.id}`
 	);
-
 	const onValid = (form: MessageForm) => {
 		if (loading) return;
 		reset();
@@ -70,10 +82,24 @@ const ChatDetail: NextPage = () => {
 		sendMessage({ form, productId: data?.chat?.productId });
 	};
 
+	// scroll to bottom
+	const chatBoxRef = React.createRef<HTMLDivElement>();
+
+	useEffect(() => {
+		(() => {
+			if (chatBoxRef.current) {
+				chatBoxRef.current.scrollTop =
+					chatBoxRef.current.scrollHeight - 100;
+			}
+		})();
+	}, [data, chatBoxRef]);
 	return (
 		<LayOut canGoBack seoTitle="Chat">
-			<div className="py-10 pb-16 h-[100vh] overflow-y-scroll  px-4 space-y-4">
-				{data?.chat.messages.map((message) => (
+			<div
+				className="py-10 pb-28 h-[100vh] overflow-y-scroll  px-4 space-y-4 scrollbar-hide"
+				ref={chatBoxRef}
+			>
+				{data?.chat?.messages.map((message) => (
 					<Message
 						key={message.id}
 						message={message.message}

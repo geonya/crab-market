@@ -10,6 +10,7 @@ import { cls } from "@libs/client/utils";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import useUser from "@libs/client/useUser";
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -23,6 +24,7 @@ interface ItemDetailResponse {
 }
 
 const ItemDetail: NextPage = () => {
+	const { user } = useUser();
 	const router = useRouter();
 	const { mutate } = useSWRConfig();
 	const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
@@ -35,10 +37,9 @@ const ItemDetail: NextPage = () => {
 			(prev) => prev && { ...prev, isLiked: !prev.isLiked },
 			false
 		);
-		mutate(`/api/users/me`, (prev: any) => ({ ok: !prev.ok }), false);
+		mutate(`/api/users/me`, (prev: any) => ({ ok: !prev?.ok }), false);
 		toggleFav({});
 	};
-
 	const { handleSubmit } = useForm();
 	const [createChatRoom, { loading, data: chatData }] =
 		useMutation("/api/chats");
@@ -48,16 +49,22 @@ const ItemDetail: NextPage = () => {
 		createChatRoom({ productId });
 	};
 	useEffect(() => {
+		if (!chatData?.ok) {
+			if (chatData?.currentChat) {
+				if (user?.id === chatData?.currentChat.userId)
+					router.push(`/chats/${chatData?.currentChat?.id}`);
+			}
+		}
 		if (chatData?.ok) {
 			router.push(`/chats/${chatData.chat.id}`);
 		}
-	}, [chatData, router]);
+	}, [user, chatData, router]);
 	return (
 		<LayOut hasTabBar canGoBack seoTitle="Product Detail">
 			<div className="px-4 py-4">
 				<div className="mb-8">
 					<div className="relative pb-96">
-						{data?.product.image ? (
+						{data?.product?.image ? (
 							<Image
 								layout="fill"
 								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product.image}/public`}

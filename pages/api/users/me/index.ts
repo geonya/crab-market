@@ -21,7 +21,7 @@ async function handler(
 			session: { user },
 			body: { email, phone, name, avatarId },
 		} = req;
-		const currenUser = await client.user.findUnique({
+		const currentUser = await client.user.findUnique({
 			where: {
 				id: user?.id,
 			},
@@ -36,7 +36,7 @@ async function handler(
 				},
 			});
 		}
-		if (email && email !== currenUser?.email) {
+		if (email && email !== currentUser?.email) {
 			const alreadyExists = Boolean(
 				await client.user.findUnique({
 					where: {
@@ -65,7 +65,7 @@ async function handler(
 				ok: true,
 			});
 		}
-		if (phone && phone !== currenUser?.phone) {
+		if (phone && phone !== currentUser?.phone) {
 			const alreadyExists = Boolean(
 				await client.user.findUnique({
 					where: {

@@ -13,9 +13,18 @@ async function handler(
 		} = req;
 		const chats = await client.chat.findMany({
 			where: {
-				user: {
-					id: user?.id,
-				},
+				OR: [
+					{
+						user: {
+							id: user?.id,
+						},
+					},
+					{
+						product: {
+							userId: user?.id,
+						},
+					},
+				],
 			},
 			include: {
 				user: {
@@ -29,8 +38,15 @@ async function handler(
 					select: {
 						id: true,
 						name: true,
+						user: {
+							select: {
+								name: true,
+								avatar: true,
+							},
+						},
 					},
 				},
+				messages: {},
 			},
 		});
 		res.json({
@@ -43,6 +59,40 @@ async function handler(
 			body: { productId },
 			session: { user },
 		} = req;
+		const currentChat = await client.chat.findFirst({
+			where: {
+				product: {
+					id: productId,
+				},
+				user: {
+					id: user?.id,
+				},
+			},
+		});
+		if (currentChat) {
+			return res.json({
+				ok: false,
+				currentChat,
+			});
+		}
+		const product = await client.product.findUnique({
+			where: {
+				id: productId,
+			},
+			include: {
+				user: {
+					select: {
+						id: true,
+					},
+				},
+			},
+		});
+		if (product?.user.id === user?.id) {
+			return res.json({
+				ok: false,
+				error: "You can't make chat room in your product",
+			});
+		}
 		const chat = await client.chat.create({
 			data: {
 				product: {

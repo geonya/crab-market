@@ -63,6 +63,8 @@ const Upload: NextPage = () => {
 				<div>
 					{photoPreview ? (
 						<Image
+							width={600}
+							height={350}
 							src={photoPreview}
 							className="w-full h-46 text-gray-600 aspect-video rounded-md "
 							alt="photoPreview"

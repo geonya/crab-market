@@ -12,26 +12,29 @@ async function handler(
 			query: { id },
 			session: { user },
 		} = req;
-		const chat = await client.chat.findUnique({
+		const chat = await client.chat.findFirst({
 			where: {
-				id: +id.toString(),
+				OR: [
+					{
+						id: +id.toString(),
+						user: {
+							id: user?.id,
+						},
+					},
+					{
+						id: +id.toString(),
+						product: {
+							user: {
+								id: user?.id,
+							},
+						},
+					},
+				],
 			},
 			include: {
-				user: {
-					select: {
-						id: true,
-						name: true,
-						avatar: true,
-					},
-				},
-				product: {
-					select: {
-						id: true,
-						name: true,
-					},
-				},
 				messages: {
 					select: {
+						id: true,
 						message: true,
 						user: {
 							select: {
@@ -44,7 +47,11 @@ async function handler(
 				},
 			},
 		});
-		res.json({
+		if (!chat)
+			res.json({
+				ok: false,
+			});
+		return res.json({
 			ok: true,
 			chat,
 		});
@@ -71,7 +78,7 @@ async function handler(
 				},
 				user: {
 					connect: {
-						id: user?.id,
+						id: Number(user?.id),
 					},
 				},
 			},
