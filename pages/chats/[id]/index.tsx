@@ -89,14 +89,14 @@ const ChatDetail: NextPage = () => {
 		(() => {
 			if (chatBoxRef.current) {
 				chatBoxRef.current.scrollTop =
-					chatBoxRef.current.scrollHeight - 100;
+					chatBoxRef.current.scrollHeight + 100;
 			}
 		})();
 	}, [data, chatBoxRef]);
 	return (
 		<LayOut canGoBack seoTitle="Chat">
 			<div
-				className="py-10 pb-28 h-[100vh] overflow-y-scroll  px-4 space-y-4 scrollbar-hide"
+				className="py-10 pb-32 h-[100vh] overflow-y-scroll  px-4 space-y-4 scrollbar-hide"
 				ref={chatBoxRef}
 			>
 				{data?.chat?.messages.map((message) => (
