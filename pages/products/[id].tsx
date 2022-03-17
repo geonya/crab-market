@@ -27,13 +27,12 @@ interface ItemDetailResponse {
 const ItemDetail: NextPage<ItemDetailResponse> = ({
 	product,
 	relatedProducts,
-	isLiked,
 }) => {
 	const { user } = useUser();
 	const router = useRouter();
 	const { mutate } = useSWRConfig();
 	const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
-		router.query.id ? `/api/products/${router.query.id}` : null
+		`/api/products/${router.query.id}`
 	);
 	const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
 	const onFavClick = () => {
@@ -81,33 +80,24 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 			<div className="px-4 py-4">
 				<div className="mb-8">
 					<div className="relative pb-96">
-						{product?.image ? (
-							<Image
-								layout="fill"
-								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product.image}/public`}
-								className="object-cover"
-								alt="product-name"
-							/>
-						) : (
-							<div className="bg-slate-300 object-cover" />
-						)}
+						<Image
+							layout="fill"
+							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product?.image}/public`}
+							className="object-cover"
+							alt="product-name"
+						/>
 					</div>
 					<div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-						{product?.user?.avatar ? (
-							<Image
-								width={48}
-								height={48}
-								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product?.user?.avatar}/avatar`}
-								className="w-12 h-12 rounded-full bg-slate-300"
-								alt="avatar-image"
-							/>
-						) : (
-							<div className="w-12 h-12 rounded-full bg-slate-300" />
-						)}
-
+						<Image
+							width={48}
+							height={48}
+							src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product?.user?.avatar}/avatar`}
+							className="w-12 h-12 rounded-full bg-slate-300"
+							alt="avatar-image"
+						/>
 						<div>
 							<p className="text-sm font-medium text-gray-700">
-								{product ? product?.user?.name : "Loading..."}
+								{product?.user?.name}
 							</p>
 							<Link href={`/users/profile/${product?.user?.id}`}>
 								<a className="text-xs font-medium text-gray-500">
@@ -118,10 +108,10 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 					</div>
 					<div className="mt-5">
 						<h1 className="text-3xl font-bold text-gray-900">
-							{product ? product?.name : "Loading..."}
+							{product?.name}
 						</h1>
 						<span className="text-3xl mt-3 text-gray-900 block">
-							₩ {product ? product?.price : "Loading..."}
+							₩ {product?.price}
 						</span>
 						<p className="text-base my-6 text-gray-700">
 							{product?.description}
@@ -134,13 +124,13 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 							<button
 								onClick={onFavClick}
 								className={cls(
-									"p-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500",
-									isLiked
+									"p-3 rounded-md flex items-center justify-center",
+									data?.isLiked
 										? "text-red-500 hover:text-red-600"
 										: "text-gray-400 hover:text-gray-500"
 								)}
 							>
-								{isLiked ? (
+								{data?.isLiked ? (
 									<svg
 										className="w-6 h-6"
 										fill="currentColor"
@@ -201,6 +191,7 @@ const ItemDetail: NextPage<ItemDetailResponse> = ({
 		</LayOut>
 	);
 };
+
 export const getStaticPaths: GetStaticPaths = () => {
 	return {
 		paths: [],
@@ -213,7 +204,6 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			props: {},
 		};
 	}
-
 	const product = await client.product.findUnique({
 		where: {
 			id: +ctx.params.id.toString(),
@@ -243,14 +233,14 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 			},
 		},
 	});
-	const isLiked = false;
 
 	return {
 		props: {
 			product: JSON.parse(JSON.stringify(product)),
 			relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
-			isLiked,
 		},
+		revalidate: 60,
 	};
 };
+
 export default ItemDetail;

@@ -1,6 +1,6 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import LayOut from "@components/layout";
-import useSWR from "swr";
+import useSWR, { SWRConfig, unstable_serialize } from "swr";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { Answer, Post, User } from "@prisma/client";
@@ -10,6 +10,7 @@ import { cls } from "@libs/client/utils";
 import TextArea from "@components/textarea";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import client from "@libs/server/client";
 
 interface AnswerWithUser extends Answer {
 	user: User;
@@ -29,6 +30,7 @@ interface AnswerForm {
 }
 
 interface CommunityPostResponse {
+	id: string;
 	ok: boolean;
 	post: PostWithUser;
 	isWondering: boolean;
@@ -42,9 +44,11 @@ interface AnswerResponse {
 const CommunityPostDetail: NextPage = () => {
 	const router = useRouter();
 	const { register, handleSubmit, reset } = useForm<AnswerForm>();
-	const { data, mutate } = useSWR<CommunityPostResponse>(
-		router.query.id ? `/api/posts/${router.query.id}` : null
-	);
+	const { data, mutate } = useSWR<CommunityPostResponse>([
+		"api",
+		"posts",
+		router.query.id,
+	]);
 	useEffect(() => {
 		if (data?.ok && !data?.post) {
 			router.back();
@@ -208,7 +212,7 @@ const CommunityPostDetail: NextPage = () => {
 						})}
 					/>
 					<button className="mt-2 w-full bg-orange-500 hover:bg-orange-600 text-white py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:right-2 focus:ring-offset-2 focus:ring-orage-500 focus:outline-none">
-						{answerLoading ? "Loading..." : "Reply"}
+						Reply
 					</button>
 				</form>
 			</div>
@@ -216,4 +220,90 @@ const CommunityPostDetail: NextPage = () => {
 	);
 };
 
-export default CommunityPostDetail;
+const Page: NextPage<CommunityPostResponse> = ({ id, post, isWondering }) => {
+	return (
+		<SWRConfig
+			value={{
+				fallback: {
+					[unstable_serialize(["api", "posts", id])]: {
+						ok: true,
+						post,
+						isWondering,
+					},
+				},
+			}}
+		>
+			<CommunityPostDetail />
+		</SWRConfig>
+	);
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+	return {
+		paths: [],
+		fallback: true,
+	};
+};
+
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	const id = ctx?.params?.id;
+	if (!id) {
+		return {
+			props: {},
+		};
+	}
+	const post = await client.post.findUnique({
+		where: {
+			id: +id.toString(),
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					avatar: true,
+				},
+			},
+			answers: {
+				select: {
+					answer: true,
+					id: true,
+					user: {
+						select: {
+							id: true,
+							name: true,
+							avatar: true,
+						},
+					},
+				},
+			},
+			_count: {
+				select: {
+					answers: true,
+					wonderings: true,
+				},
+			},
+		},
+	});
+	const isWondering = Boolean(
+		await client.wondering.findFirst({
+			where: {
+				postId: +id.toString(),
+				userId: post?.user?.id,
+			},
+			select: {
+				id: true,
+			},
+		})
+	);
+	return {
+		props: {
+			post: JSON.parse(JSON.stringify(post)),
+			isWondering,
+			id,
+		},
+		revalidate: 60,
+	};
+};
+
+export default Page;

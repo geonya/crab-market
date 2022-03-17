@@ -55,6 +55,9 @@ async function handler(
 			favCount: fav,
 		},
 	});
+	res.json({
+		ok: true,
+	});
 }
 export default withApiSession(
 	withHandler({

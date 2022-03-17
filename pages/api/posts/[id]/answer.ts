@@ -2,7 +2,6 @@ import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "@libs/server/client";
 import { withApiSession } from "@libs/server/withSession";
-import { userInfo } from "os";
 
 async function handler(
 	req: NextApiRequest,
@@ -13,7 +12,6 @@ async function handler(
 		session: { user },
 		body: { answer },
 	} = req;
-
 	const newAnswer = await client.answer.create({
 		data: {
 			user: {
@@ -29,10 +27,12 @@ async function handler(
 			answer,
 		},
 	});
-	res.json({
-		ok: true,
-		answer: newAnswer,
-	});
+	try {
+		await res.unstable_revalidate(`/`);
+		return res.json({ ok: true, answer: newAnswer, revalidated: true });
+	} catch (err) {
+		return res.status(500);
+	}
 }
 
 export default withApiSession(
