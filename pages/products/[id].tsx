@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Button from "@components/button";
 import LayOut from "@components/layout";
 import { useRouter } from "next/router";
@@ -11,6 +11,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { useEffect } from "react";
 import useUser from "@libs/client/useUser";
+import client from "@libs/server/client";
 
 interface ProductWithUser extends Product {
 	user: User;
@@ -23,7 +24,11 @@ interface ItemDetailResponse {
 	isLiked: boolean;
 }
 
-const ItemDetail: NextPage = () => {
+const ItemDetail: NextPage<ItemDetailResponse> = ({
+	product,
+	relatedProducts,
+	isLiked,
+}) => {
 	const { user } = useUser();
 	const router = useRouter();
 	const { mutate } = useSWRConfig();
@@ -59,15 +64,27 @@ const ItemDetail: NextPage = () => {
 			router.push(`/chats/${chatData.chat.id}`);
 		}
 	}, [user, chatData, router]);
+	if (router.isFallback) {
+		return (
+			<LayOut
+				title="Loading for you"
+				seoTitle="Loading"
+				hasTabBar
+				canGoBack
+			>
+				<h1 className="text-center">I Love you</h1>
+			</LayOut>
+		);
+	}
 	return (
 		<LayOut hasTabBar canGoBack seoTitle="Product Detail">
 			<div className="px-4 py-4">
 				<div className="mb-8">
 					<div className="relative pb-96">
-						{data?.product?.image ? (
+						{product?.image ? (
 							<Image
 								layout="fill"
-								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product.image}/public`}
+								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product.image}/public`}
 								className="object-cover"
 								alt="product-name"
 							/>
@@ -76,11 +93,11 @@ const ItemDetail: NextPage = () => {
 						)}
 					</div>
 					<div className="flex cursor-pointer py-3 border-t border-b items-center space-x-3">
-						{data?.product?.user?.avatar ? (
+						{product?.user?.avatar ? (
 							<Image
 								width={48}
 								height={48}
-								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${data?.product?.user?.avatar}/avatar`}
+								src={`https://imagedelivery.net/MYjqcskotz__nPdJmlB6CQ/${product?.user?.avatar}/avatar`}
 								className="w-12 h-12 rounded-full bg-slate-300"
 								alt="avatar-image"
 							/>
@@ -90,11 +107,9 @@ const ItemDetail: NextPage = () => {
 
 						<div>
 							<p className="text-sm font-medium text-gray-700">
-								{data ? data.product?.user?.name : "Loading..."}
+								{product ? product?.user?.name : "Loading..."}
 							</p>
-							<Link
-								href={`/users/profile/${data?.product?.user?.id}`}
-							>
+							<Link href={`/users/profile/${product?.user?.id}`}>
 								<a className="text-xs font-medium text-gray-500">
 									View profile &rarr;
 								</a>
@@ -103,13 +118,13 @@ const ItemDetail: NextPage = () => {
 					</div>
 					<div className="mt-5">
 						<h1 className="text-3xl font-bold text-gray-900">
-							{data ? data.product?.name : "Loading..."}
+							{product ? product?.name : "Loading..."}
 						</h1>
 						<span className="text-3xl mt-3 text-gray-900 block">
-							₩ {data ? data.product?.price : "Loading..."}
+							₩ {product ? product?.price : "Loading..."}
 						</span>
 						<p className="text-base my-6 text-gray-700">
-							{data?.product?.description}
+							{product?.description}
 						</p>
 						<div className="flex items-center justify-between space-x-2">
 							<form onSubmit={handleSubmit(onValid)}>
@@ -120,12 +135,12 @@ const ItemDetail: NextPage = () => {
 								onClick={onFavClick}
 								className={cls(
 									"p-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500",
-									data?.isLiked
+									isLiked
 										? "text-red-500 hover:text-red-600"
 										: "text-gray-400 hover:text-gray-500"
 								)}
 							>
-								{data?.isLiked ? (
+								{isLiked ? (
 									<svg
 										className="w-6 h-6"
 										fill="currentColor"
@@ -164,7 +179,7 @@ const ItemDetail: NextPage = () => {
 						Similar items
 					</h2>
 					<div className="mt-6 grid grid-cols-2 gap-4">
-						{data?.relatedProducts?.map((product) => (
+						{relatedProducts?.map((product) => (
 							<Link
 								href={`/products/${product?.id}`}
 								key={product?.id}
@@ -186,5 +201,56 @@ const ItemDetail: NextPage = () => {
 		</LayOut>
 	);
 };
+export const getStaticPaths: GetStaticPaths = () => {
+	return {
+		paths: [],
+		fallback: true,
+	};
+};
+export const getStaticProps: GetStaticProps = async (ctx) => {
+	if (!ctx?.params?.id) {
+		return {
+			props: {},
+		};
+	}
 
+	const product = await client.product.findUnique({
+		where: {
+			id: +ctx.params.id.toString(),
+		},
+		include: {
+			user: {
+				select: {
+					id: true,
+					name: true,
+					avatar: true,
+				},
+			},
+		},
+	});
+	const terms = product?.name.split(" ").map((word) => ({
+		name: {
+			contains: word,
+		},
+	}));
+	const relatedProducts = await client.product.findMany({
+		where: {
+			OR: terms,
+			AND: {
+				id: {
+					not: product?.id,
+				},
+			},
+		},
+	});
+	const isLiked = false;
+
+	return {
+		props: {
+			product: JSON.parse(JSON.stringify(product)),
+			relatedProducts: JSON.parse(JSON.stringify(relatedProducts)),
+			isLiked,
+		},
+	};
+};
 export default ItemDetail;

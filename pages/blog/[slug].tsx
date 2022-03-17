@@ -23,13 +23,9 @@ const Post: NextPage<{ data: IData; post: string }> = ({ data, post }) => {
 };
 
 export function getStaticPaths() {
-	const files = readdirSync("./posts").map((file) => {
-		const [name, extention] = file.split(".");
-		return { params: { slug: name } };
-	});
 	return {
-		paths: files,
-		fallback: false,
+		paths: [],
+		fallback: "blocking",
 	};
 }
 export const getStaticProps: GetStaticProps = async (ctx) => {
