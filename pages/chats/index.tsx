@@ -24,7 +24,6 @@ interface ChatResponse {
 const Chats: NextPage = () => {
 	const { user } = useUser();
 	const { data } = useSWR<ChatResponse>(`/api/chats`);
-	console.log(data);
 
 	return (
 		<LayOut seoTitle="Chats" hasTabBar>

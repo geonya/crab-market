@@ -33,6 +33,24 @@ async function handler(
 		const {
 			query: { latitude, longitude },
 		} = req;
+
+		// when coords has problem
+		if (!(latitude && longitude)) {
+			const posts = await client.post.findMany({
+				include: {
+					user: {
+						select: { id: true, name: true, avatar: true },
+					},
+					_count: {
+						select: {
+							wonderings: true,
+							answers: true,
+						},
+					},
+				},
+			});
+			return res.json({ ok: true, posts });
+		}
 		const parsedLatitude = parseFloat(latitude.toString());
 		const parsedLongitude = parseFloat(longitude.toString());
 		const posts = await client.post.findMany({

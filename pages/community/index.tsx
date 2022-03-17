@@ -24,12 +24,12 @@ const Community: NextPage = () => {
 	const { data } = useSWR<PostResponse>(
 		latitude && longitude
 			? `/api/posts?latitude=${latitude}&longitude=${longitude}`
-			: null
+			: `/api/posts`
 	);
 	return (
 		<LayOut title="Community" hasTabBar seoTitle="동네 생활">
 			<div className="py-16 px-4 space-y-8">
-				{data?.posts.map((post) => (
+				{data?.posts?.map((post) => (
 					<Link href={`/community/${post.id}`} key={post.id}>
 						<a className="flex cursor-pointer flex-col items-start">
 							<span className="flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">

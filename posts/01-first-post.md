@@ -9,3 +9,7 @@ category: remember
 This is my first blog post!
 
 Thank you for reading!
+
+-   potato
+-   tomato
+-   orange

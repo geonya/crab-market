@@ -12,7 +12,7 @@ interface IPost {
 }
 const Blog: NextPage<{ posts: IPost[] }> = ({ posts }) => {
 	return (
-		<LayOut title="Blog" seoTitle="Blog">
+		<LayOut title="Blog" seoTitle="Blog" hasTabBar canGoBack>
 			<h1 className="font-semibold text-center text-lg my-10">
 				Latest Posts
 			</h1>
@@ -41,7 +41,7 @@ export async function getStaticProps() {
 	const blogPosts = readdirSync("./posts").map((file) => {
 		const content = readFileSync(`./posts/${file}`, "utf-8");
 		const [slug, _] = file.split(".");
-		return { ...matter(content).data, slug: file };
+		return { ...matter(content).data, slug };
 	});
 	return {
 		props: {

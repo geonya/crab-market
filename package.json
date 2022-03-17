@@ -18,10 +18,13 @@
 		"react": "^18.0.0-rc.0",
 		"react-dom": "^18.0.0-rc.0",
 		"react-hook-form": "^7.27.1",
+		"remark-html": "^15.0.1",
+		"remark-parse": "^10.0.1",
 		"swr": "^1.2.2",
 		"tailwind-scrollbar-hide": "^1.1.7",
 		"ts-node": "^10.6.0",
-		"twilio": "^3.75.0"
+		"twilio": "^3.75.0",
+		"unified": "^10.1.2"
 	},
 	"devDependencies": {
 		"@types/node": "17.0.21",
