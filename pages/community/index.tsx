@@ -2,9 +2,7 @@ import type { GetStaticProps, NextPage } from "next";
 import Link from "next/link";
 import FloatingButton from "@components/floating-button";
 import LayOut from "@components/layout";
-import useSWR from "swr";
 import { Post, User } from "@prisma/client";
-import useCoords from "@libs/client/useCoords";
 import client from "@libs/server/client";
 
 interface PostWithUser extends Post {
