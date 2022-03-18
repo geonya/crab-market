@@ -27,12 +27,8 @@ async function handler(
 			answer,
 		},
 	});
-	try {
-		await res.unstable_revalidate(`/`);
-		return res.json({ ok: true, answer: newAnswer, revalidated: true });
-	} catch (err) {
-		return res.status(500);
-	}
+
+	return res.json({ ok: true, answer: newAnswer });
 }
 
 export default withApiSession(

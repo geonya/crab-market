@@ -1,7 +1,13 @@
 import type { NextPage } from "next";
-import Item from "@components/item";
 import LayOut from "@components/layout";
 import ProductList from "@components/product-list";
+import useSWR from "swr";
+import { Record } from "@prisma/client";
+
+interface SoldResponse {
+	ok: boolean;
+	sales: Record;
+}
 
 const Sold: NextPage = () => {
 	return (

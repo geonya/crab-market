@@ -3,7 +3,9 @@ const nextConfig = {
 	reactStrictMode: true,
 	swcMinify: true,
 	experimental: {
-		reactRoot: "concurrent",
+		reactRoot: true,
+		/* 		runtime: "nodejs",
+		serverComponents: true, */
 	},
 	images: {
 		domains: ["imagedelivery.net", "videodelivery.net"],

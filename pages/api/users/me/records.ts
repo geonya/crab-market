@@ -27,7 +27,7 @@ async function handler(
 		});
 	}
 	if (kind === "purchases") {
-		const purchses = await client.record.findMany({
+		const purchases = await client.record.findMany({
 			where: {
 				userId: user?.id,
 				kind: "Purchase",
@@ -38,7 +38,7 @@ async function handler(
 		});
 		res.json({
 			ok: true,
-			purchses,
+			purchases,
 		});
 	}
 	if (kind === "sales") {

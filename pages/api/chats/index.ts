@@ -107,6 +107,23 @@ async function handler(
 				},
 			},
 		});
+		if (chat) {
+			await client.record.create({
+				data: {
+					product: {
+						connect: {
+							id: productId,
+						},
+					},
+					user: {
+						connect: {
+							id: user?.id,
+						},
+					},
+					kind: "Purchase",
+				},
+			});
+		}
 		res.json({
 			ok: true,
 			chat,

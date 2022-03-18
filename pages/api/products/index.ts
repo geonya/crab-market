@@ -2,6 +2,7 @@ import withHandler, { ResponseType } from "@libs/server/withHandler";
 import { NextApiRequest, NextApiResponse } from "next";
 import client from "@libs/server/client";
 import { withApiSession } from "@libs/server/withSession";
+import { idText } from "typescript";
 
 async function handler(
 	req: NextApiRequest,
@@ -30,6 +31,21 @@ async function handler(
 						id: user?.id,
 					},
 				},
+			},
+		});
+		await client.record.create({
+			data: {
+				user: {
+					connect: {
+						id: user?.id,
+					},
+				},
+				product: {
+					connect: {
+						id: product.id,
+					},
+				},
+				kind: "Sale",
 			},
 		});
 		res.json({

@@ -1,15 +1,13 @@
-import type { NextPage, NextPageContext } from "next";
+import type { NextPage } from "next";
 import LayOut from "@components/layout";
 import Message from "@components/message";
 import useUser from "@libs/client/useUser";
-import useSWR, { SWRConfig } from "swr";
+import useSWR from "swr";
 import { useRouter } from "next/router";
-import { Chat, User } from "@prisma/client";
+import { Chat } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@libs/client/useMutation";
-import { withSsrSession } from "@libs/server/withSession";
-import client from "@libs/server/client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 
 interface ChatMessage {
 	id: number;

@@ -57,6 +57,8 @@ model Product {
   commentsCount Int       @default(0)
   chats         Chat[]
   messages      Message[]
+
+  @@index([userId])
 }
 
 model Post {
@@ -70,6 +72,8 @@ model Post {
   wonderings Wondering[]
   latitude   Float?
   longitude  Float?
+
+  @@index([userId])
 }
 
 model Answer {
@@ -81,6 +85,9 @@ model Answer {
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   answer    String   @db.MediumText
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Wondering {
@@ -91,6 +98,10 @@ model Wondering {
   userId    Int
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
+
+
+  @@index([userId])
+  @@index([postId])
 }
 
 model Review {
@@ -103,6 +114,9 @@ model Review {
   createdForId Int
   createdFor   User     @relation(name: "receivedReviews", fields: [createdForId], references: [id], onDelete: Cascade)
   score        Int      @default(1)
+
+  @@index([createdById])
+  @@index([createdForId])
 }
 
 model Record {
@@ -115,6 +129,8 @@ model Record {
   productId Int
   kind      Kind
 
+  @@index([userId])
+  @@index([productId])
 }
 
 enum Kind {
@@ -136,6 +152,8 @@ model Stream {
   cloudflardId  String
   cloudflareUrl String
   cloudflareKey String
+
+  @@index([userId])
 }
 
 model Chat {
@@ -147,6 +165,9 @@ model Chat {
   product   Product?  @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId Int?
   messages  Message[]
+
+  @@index([userId])
+  @@index([productId])
 }
 
 model Message {
@@ -162,4 +183,8 @@ model Message {
   productId Int?
   chat      Chat?    @relation(fields: [chatId], references: [id], onDelete: Cascade)
   chatId    Int?
+
+  @@index([userId])
+  @@index([streamId])
+  @@index([productId])
 }
