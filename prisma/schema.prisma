@@ -8,7 +8,7 @@ generator client {
 
 datasource db {
   provider             = "mysql"
-  url                  = "mysql://127.0.0.1:3306/crab-market"
+  url                  = env("DATABASE_URL")
   referentialIntegrity = "prisma"
 }
 
