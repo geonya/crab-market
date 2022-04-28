@@ -34,9 +34,7 @@ const Community: NextPage<PostResponse> = ({ posts }) => {
 								동네질문
 							</span>
 							<div className="mt-2 text-gray-700">
-								<span className="text-orange-500 font-medium">
-									Q.
-								</span>
+								<span className="text-orange-500 font-medium">Q.</span>
 								{post.question}
 							</div>
 							<div className="mt-5 flex items-center justify-between w-full text-gray-500 font-medium text-xs">
@@ -59,9 +57,7 @@ const Community: NextPage<PostResponse> = ({ posts }) => {
 											d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
 										></path>
 									</svg>
-									<span>
-										궁금해요 {post._count?.wonderings}{" "}
-									</span>
+									<span>궁금해요 {post._count?.wonderings} </span>
 								</span>
 								<span className="flex space-x-2 items-center text-sm">
 									<svg
