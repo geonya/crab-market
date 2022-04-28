@@ -1,7 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function MyDocument() {
-	console.log("Document is running!");
 	return (
 		<Html lang="ko">
 			<Head>
