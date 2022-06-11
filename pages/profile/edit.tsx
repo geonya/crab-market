@@ -30,7 +30,9 @@ const EditProfile: NextPage = () => {
 		setError,
 		formState: { errors },
 		watch,
+		clearErrors,
 	} = useForm<EditProfileForm>();
+
 	useEffect(() => {
 		if (user?.name) setValue("name", user.name);
 		if (user?.email) setValue("email", user.email);
@@ -44,7 +46,7 @@ const EditProfile: NextPage = () => {
 		useMutation<EditProfileResponse>(`/api/users/me`);
 	const onValid = async ({ email, phone, name, avatar }: EditProfileForm) => {
 		if (loading) return;
-		if (email === "" && phone === "" && name === "") {
+		if ((email === "" && phone === "") || name === "") {
 			setError("formErrors", {
 				message: "Email or phone number are required.",
 			});
@@ -89,12 +91,16 @@ const EditProfile: NextPage = () => {
 			setAvatarPreview(URL.createObjectURL(file));
 		}
 	}, [avatar]);
+	useEffect(() => {
+		if (errors) {
+			const watching = watch(() => clearErrors());
+			return () => watching.unsubscribe();
+		}
+	}, [errors, watch, clearErrors]);
+
 	return (
 		<LayOut canGoBack seoTitle="Edit Profile">
-			<form
-				onSubmit={handleSubmit(onValid)}
-				className="py-10 px-4 space-y-4"
-			>
+			<form onSubmit={handleSubmit(onValid)} className="py-10 px-4 space-y-4">
 				<div className="flex items-center space-x-3">
 					{avatarPreview ? (
 						<Image

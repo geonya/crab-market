@@ -13,7 +13,7 @@ interface ProductsResponse {
 const Home: NextPage = () => {
 	const { data } = useSWR<ProductsResponse>(`/api/products`);
 	return (
-		<LayOut seoTitle="Home" hasTabBar>
+		<LayOut title="Crab Market" seoTitle="Home" hasTabBar>
 			<div className="flex flex-col space-y-5 divide-y-[1px]">
 				{data
 					? data?.products?.map((product) => (
